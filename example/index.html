@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Leaflet.TileLayer.CustomCRS</title>
+    <meta charset="utf-8">
+
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+
+    <script type="text/javascript" src="/vendors/leaflet/leaflet-src.js"></script>
+    <script type="text/javascript" src="/vendors/leaflet-tilelayer-customcrs.js"></script>
+
+    <link rel="stylesheet" href="/vendors/leaflet/leaflet.css" media="screen" title="no title" charset="utf-8">
+
+    <style>
+        html,body { height: 100%; margin: 0; padding: 0; }
+        #map { width: 80%; height: 100%; float: left }
+        #sidebar {width: 20%; height: 100%; float: left}
+    </style>
+
+</head>
+
+<body>
+<div id="map"></div>
+
+<div id="sidebar">
+    <br><br>
+    <button class="_gis_btn">set base layer: 2gis (EPSG3857)</button>
+    <br><br>
+    <button class="_yandex_btn">set base layer: yandex (EPSG3395)</button>
+    <br><br>
+    <button class="_traffic_btn">set traffic layer: traffic (EPSG3395)</button>
+
+</div>
+
+<script type="text/javascript">
+
+var map = L.map('map', {
+  center: [55.7522200, 37.6155600],
+  zoom: 12
+});
+
+// EPSG3857
+var gisLayer = L.tileLayer(
+  'http://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1', {
+    subdomains: ['0', '1', '2', '3'],
+    attribution: '2gis.ru',
+    reuseTiles: true,
+    updateWhenIdle: false
+  });
+
+// EPSG3395
+var yandexLayer = L.tileLayer(
+  'http://vec{s}.maps.yandex.net/tiles?l=map&v=4.55.2&z={z}&x={x}&y={y}&scale=1&lang=ru_RU', {
+    subdomains: ['01', '02', '03', '04'],
+    attribution: 'yandex.ru',
+    reuseTiles: true,
+    updateWhenIdle: false,
+    crs: L.CRS.EPSG3395
+  }
+);
+
+// EPSG3395
+var trafficLayer = new L.TileLayerCustomCRS(
+  'http://jgo.maps.yandex.net/1.1/tiles?l=trf,trfe&lang=ru_RU&x={x}&y={y}&z={z}&scale=1&tm=1450856219', {
+    attribution: 'yandex.ru traffic layer',
+    reuseTiles: true,
+    updateWhenIdle: false,
+
+    // set custom crs for layer
+    crs: L.CRS.EPSG3395
+  }
+);
+
+map.addLayer(gisLayer);
+map.addLayer(trafficLayer);
+
+
+// toggle base layer and crs
+var setBaseLayer = function(name) {
+
+  var layer;
+
+  if (name == 'yandex') {
+    layer = yandexLayer;
+  } else {
+    layer = gisLayer;
+  }
+
+  if (name == 'yandex') {
+    map.removeLayer(gisLayer);
+  } else {
+    map.removeLayer(yandexLayer);
+  }
+
+  var center = map.getCenter();
+
+  if (name == 'yandex') {
+    map.options.crs = L.CRS.EPSG3395;
+  } else {
+    map.options.crs = L.CRS.EPSG3857;
+  }
+
+  map.setView(center);
+
+  map._resetView(map.getCenter(), map.getZoom());
+
+  map.addLayer(layer);
+
+  if (map.hasLayer(trafficLayer)) {
+    trafficLayer.bringToFront();
+  }
+};
+
+map.addLayer(gisLayer);
+map.addLayer(trafficLayer);
+
+
+// buttons
+$('._gis_btn').click(function() {
+  setBaseLayer('gis');
+});
+
+$('._yandex_btn').click(function() {
+  setBaseLayer('yandex');
+});
+
+$('._traffic_btn').click(function() {
+  if (map.hasLayer(trafficLayer)) {
+    map.removeLayer(trafficLayer);
+  } else {
+    map.addLayer(trafficLayer);
+  }
+});
+
+
+</script>
+
+</body>
+
+</html>

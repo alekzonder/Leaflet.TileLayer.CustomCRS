@@ -1,0 +1,33 @@
+{
+  "name": "leaflet.tilelayer.customcrs",
+  "version": "0.1.0",
+  "description": "custom crs for tile layer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alekzonder/Leaflet.TileLayer.CustomCRS.git"
+  },
+  "keywords": [
+    "leaflet",
+    "tile",
+    "layer",
+    "crs"
+  ],
+  "author": "alekzonder <alekzonder@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alekzonder/Leaflet.TileLayer.CustomCRS/issues"
+  },
+  "homepage": "https://github.com/alekzonder/Leaflet.TileLayer.CustomCRS",
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "leaflet": "^1.0.0-beta.2"
+  },
+  "devDependencies": {
+    "express": "^4.13.3",
+    "gulp-rename": "^1.2.2"
+  }
+}
